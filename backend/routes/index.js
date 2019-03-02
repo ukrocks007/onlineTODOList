@@ -34,6 +34,9 @@ routesApi.includeRoutes = app => {
     app.use('/auth', userAuth);
 
     app.use('/apis/*', isLoggedIn);
+
+    const todo = require('./todoList');
+    app.use('/apis/todo', todo);
 }
 
 module.exports = routesApi;
