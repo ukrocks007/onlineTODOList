@@ -79,7 +79,6 @@ class Login extends Component {
                 width: '100%',
                 position: 'fixed',
                 backgroundSize: "contain",
-                backgroundImage: "url(" + "/images/bg.png)",
                 backgroundPositionY: "bottom",
                 backgroundRepeat: "repeat-x",
                 backgroundRepeatX: "repeat",
