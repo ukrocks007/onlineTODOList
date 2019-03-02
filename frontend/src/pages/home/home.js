@@ -164,6 +164,30 @@ class Home extends Component {
             });
         }
     }
+
+    handleTodoTitleChange = (e) => {
+        let currentList = this.state.currentList;
+        currentList[e.target.name] = e.target.value;
+        this.setState({
+            currentList: currentList
+        });
+    }
+
+    handleTodoTextChange = (e) => {
+        let currentList = this.state.currentList;
+        currentList.list[e.target.name].item = e.target.value;
+        this.setState({
+            currentList: currentList
+        });
+    }
+
+    handleTodoItemRemove = (e) => {
+        let currentList = this.state.currentList;
+        currentList.list.splice(e.target.name, 1);
+        this.setState({
+            currentList: currentList
+        });
+    }
       
   render() {
     return (
@@ -205,16 +229,69 @@ class Home extends Component {
             </Grid.Col>
             <Grid.Col md={9}>
                 <div style={{marginTop: '10%'}}>
-                    <Card>
+                    {this.state.editMode ? (
+                        <Card>
+                        <Card.Header>
+                            <Card.Title><Form.Input name="title" value={this.state.currentList.title} onChange={this.handleTodoTitleChange} /></Card.Title>
+                            <Card.Options>
+                            <Button 
+                                color={this.state.editMode ? "success" : "info"} 
+                                size="sm" 
+                                icon={this.state.editMode ? "check" : "edit"} 
+                                onClick={()=>{
+                                this.setState({editMode: !this.state.editMode})
+                            }}>
+                                {this.state.editMode ? "Done" : "Edit"}
+                            </Button>
+                            <Button disabled={this.state.editMode} loading={this.state.removeLoader} color="danger" size="sm" className="ml-2" icon="trash-2" onClick={this.remove.bind(this)}>
+                                Remove
+                            </Button>
+                            </Card.Options>
+                        </Card.Header>
+                        <Card.Body>
+                        <Form.Group label="Tasks">
+                            {
+                                this.state.currentTodos.map((data, i) => {
+                                    return (
+                                            <Form.InputGroup key={i}>
+                                                <Form.Input name={i} value={data.item} onChange={this.handleTodoTextChange.bind(this)}/>
+                                                <Form.InputGroupAppend>
+                                                <Button
+                                                    name={i}
+                                                    color="danger"
+                                                    icon="x"
+                                                    outline
+                                                    onClick={this.handleTodoItemRemove.bind(this)}
+                                                >
+                                                </Button>
+                                                </Form.InputGroupAppend>
+                                            </Form.InputGroup>
+                                    )
+                                })
+                            }
+                        </Form.Group>
+                        </Card.Body>
+                        <Card.Footer>
+                            <div style={{float:"right"}}>
+                                <Button disabled={this.state.editMode} loading={this.state.loading} color="primary" icon="repeat" onClick={this.update.bind(this)}>Update</Button>
+                            </div>
+                        </Card.Footer>
+                    </Card>
+                    ) : (
+                        <Card>
                         <Card.Header>
                             <Card.Title>{this.state.currentList ? this.state.currentList.title : ""}</Card.Title>
                             <Card.Options>
-                            <Button color="info" size="sm" icon="edit" onClick={()=>{
-                                this.setState({editMode: true})
+                            <Button 
+                                color={this.state.editMode ? "success" : "info"} 
+                                size="sm" 
+                                icon={this.state.editMode ? "check" : "edit"} 
+                                onClick={()=>{
+                                this.setState({editMode: !this.state.editMode})
                             }}>
-                                Edit
+                                {this.state.editMode ? "Done" : "Edit"}
                             </Button>
-                            <Button loading={this.state.removeLoader} color="danger" size="sm" className="ml-2" icon="trash-2" onClick={this.remove.bind(this)}>
+                            <Button disabled={this.state.editMode} loading={this.state.removeLoader} color="danger" size="sm" className="ml-2" icon="trash-2" onClick={this.remove.bind(this)}>
                                 Remove
                             </Button>
                             </Card.Options>
@@ -238,10 +315,11 @@ class Home extends Component {
                         </Card.Body>
                         <Card.Footer>
                             <div style={{float:"right"}}>
-                                <Button loading={this.state.loading} color="primary" icon="repeat" onClick={this.update.bind(this)}>Update</Button>
+                                <Button disabled={this.state.editMode} loading={this.state.loading} color="primary" icon="repeat" onClick={this.update.bind(this)}>Update</Button>
                             </div>
                         </Card.Footer>
                     </Card>
+                    )}
                     <div style={{
                         display: this.state.AlertText ? "block" : "none"
                     }}>
