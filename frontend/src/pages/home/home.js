@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import SiteWrapper from '../container/layout';
 import {
-    Page, Card, Button, Form, Grid, List, Container
+    Page, Card, Button, Form, Grid, List, Container, Alert
 } from 'tabler-react';
 import axios from 'axios';
 
@@ -16,7 +16,11 @@ class Home extends Component {
             currentindex: -1,
             currentList: {},
             currentTodos: [],
-            mode: 'view',
+            editMode: false,
+            loading: false,
+            AlertText: "",
+            AlertType: "danger",
+            removeLoader: false,
         }
     }
 
@@ -37,7 +41,14 @@ class Home extends Component {
                             todoList: res.data.todo,
                         });
                         if(res.data.todo.length > 0){
-                            this.onListChanged(0);
+                            this.onListChanged((this.state.currentindex >=0 && this.state.currentindex <= (res.data.todo.length - 1)) 
+                            ? this.state.currentindex : 0);
+                        } else {
+                            this.setState({
+                                currentList: {},
+                                currentTodos: [],
+                                currentindex: -1,
+                            });
                         }
                     }
                 })
@@ -52,10 +63,8 @@ class Home extends Component {
     create = async () => {
         try {
             axios.get('/apis/todo')
-            .then((err, res) => {
-                if(err){
-                    console.log(err);
-                }
+            .then((res) => {
+                
             })
             .catch(err => {
                 console.log(err);
@@ -67,38 +76,83 @@ class Home extends Component {
 
     update = async () => {
         try {
-            axios.get('/apis/todo')
-            .then((err, res) => {
-                if(err){
-                    console.log(err);
+            this.setState({
+                loading: true
+            });
+            axios.post('/apis/todo/update', {
+                updatedList: this.state.currentList
+            })
+            .then((res) => {
+                if(res.data.success){
+                    this.setState({
+                        loading: false,
+                        AlertText: "List Updated!",
+                        AlertType: "success"
+                    });
+                    this.getAllToDos();
                 }
             })
             .catch(err => {
+                this.setState({
+                    loading: false,
+                    AlertText: err,
+                    AlertType: "danger"
+                });
                 console.log(err);
             });
         } catch (ex) {
+            this.setState({
+                loading: false,
+                AlertText: ex.message,
+                AlertType: "danger"
+            });
             console.log(ex);
         }
     }
 
     remove = async () => {
         try {
-            axios.get('/apis/todo')
-            .then((err, res) => {
-                if(err){
-                    console.log(err);
+            this.setState({removeLoader: true});
+            axios.post('/apis/todo/remove', {
+                "id": this.state.currentList._id
+            })
+            .then((res) => {
+                if(res.data.success){
+                    this.setState({
+                        removeLoader: false,
+                        AlertText: "ToDo list deleted!",
+                        AlertType: "success"
+                    });
+                    this.getAllToDos();
                 }
             })
             .catch(err => {
+                this.setState({
+                    removeLoader: false,
+                    AlertText: err,
+                    AlertType: "danger"
+                });
                 console.log(err);
             });
         } catch (ex) {
+            this.setState({
+                removeLoader: false,
+                AlertText: ex.message,
+                AlertType: "danger"
+            });
             console.log(ex);
         }
     }
 
     toggleChecked = (index) => {
-        
+        let currentList = this.state.currentList;
+        currentList.list[index].done = !currentList.list[index].done;
+        let allTodos = this.state.todoList;
+        allTodos[this.state.currentindex] = currentList;
+        this.setState({
+            todoList: allTodos,
+            currentList: currentList
+        });
     }
 
     onListChanged = (index) => {
@@ -155,11 +209,13 @@ class Home extends Component {
                         <Card.Header>
                             <Card.Title>{this.state.currentList ? this.state.currentList.title : ""}</Card.Title>
                             <Card.Options>
-                            <Button color="primary" size="sm">
-                                Action 1
+                            <Button color="info" size="sm" icon="edit" onClick={()=>{
+                                this.setState({editMode: true})
+                            }}>
+                                Edit
                             </Button>
-                            <Button color="secondary" size="sm" className="ml-2">
-                                Action 2
+                            <Button loading={this.state.removeLoader} color="danger" size="sm" className="ml-2" icon="trash-2" onClick={this.remove.bind(this)}>
+                                Remove
                             </Button>
                             </Card.Options>
                         </Card.Header>
@@ -169,6 +225,7 @@ class Home extends Component {
                                 this.state.currentTodos.map((data, i) => {
                                     return (
                                             <Form.Checkbox 
+                                                key = { i }
                                                 checked = { data.done } 
                                                 onChange = { this.toggleChecked.bind(this, i) }
                                                 label = { data.item } 
@@ -179,7 +236,21 @@ class Home extends Component {
                             }
                         </Form.Group>
                         </Card.Body>
+                        <Card.Footer>
+                            <div style={{float:"right"}}>
+                                <Button loading={this.state.loading} color="primary" icon="repeat" onClick={this.update.bind(this)}>Update</Button>
+                            </div>
+                        </Card.Footer>
                     </Card>
+                    <div style={{
+                        display: this.state.AlertText ? "block" : "none"
+                    }}>
+                        <Alert type = { this.state.AlertType } icon = {
+                            this.state.AlertType == "success" ? "check" : "alert-triangle"
+                        }>
+                            {this.state.AlertText}
+                        </Alert>
+                    </div>
                 </div>
             </Grid.Col>
           </Grid.Row>
