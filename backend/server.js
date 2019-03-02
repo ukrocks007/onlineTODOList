@@ -17,17 +17,18 @@ app.use(
 );
 
 mongoose.connect(
-    config.MONGO_URL,
-    { useNewUrlParser: true }
+    config.MONGO_URL, {
+        useNewUrlParser: true
+    }
 );
 
 router.includeRoutes(app);
 
 var server = app.listen(process.env.PORT || 80, function () {
-   var host = server.address().address
-   var port = server.address().port
-   
-   console.log("app listening at http://%s:%s", host, port)
+    var host = server.address().address
+    var port = server.address().port
+
+    console.log("app listening at http://%s:%s", host, port)
 })
 
 module.exports = app;

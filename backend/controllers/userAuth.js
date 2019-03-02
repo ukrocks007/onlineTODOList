@@ -7,7 +7,7 @@ const login = async (username, password) => {
         var user = await Users.findOne({
             email: username
         });
-        console.log("Found: ", user);
+        console.log("Found", !!user);
         if (user) {
             return new Promise((resolve, reject) => {
                 user.comparePassword(password, (error, isMatch) => {
