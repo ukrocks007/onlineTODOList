@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const mongoose = require('mongoose');
 var config = require('./configs/config');
+const router = require('./routes/index');
 
 app.use(helmet());
 app.use(cors());
@@ -20,7 +21,7 @@ mongoose.connect(
     { useNewUrlParser: true }
 );
 
-app.use('/ping', (req, res) => res.status(200).send('pong'));
+router.includeRoutes(app);
 
 var server = app.listen(process.env.PORT || 80, function () {
    var host = server.address().address
