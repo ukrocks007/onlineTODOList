@@ -62,14 +62,46 @@ class Home extends Component {
 
     create = async () => {
         try {
-            axios.get('/apis/todo')
-            .then((res) => {
-                
-            })
-            .catch(err => {
-                console.log(err);
-            });
+            if (this.state.currentList.list.length > 0) {
+                this.setState({
+                    AlertText: "",
+                    AlertType: "danger",
+                    createLoader: true,
+                    newList: false
+                });
+                axios.post('/apis/todo', {
+                        newList: this.state.currentList,
+                    })
+                    .then((res) => {
+                        if (res.data.success) {
+                            this.setState({
+                                AlertText: "New Todo List added!",
+                                AlertType: "success",
+                                createLoader: false
+                            });
+                        }
+                        this.getAllToDos();
+                    })
+                    .catch(err => {
+                        this.setState({
+                            AlertText: err,
+                            AlertType: "danger",
+                            createLoader: false
+                        });
+                        console.log(err);
+                    });
+            } else {
+                this.setState({
+                    AlertText: "Please add at least one task",
+                    AlertType: "danger",
+                });
+            }
         } catch (ex) {
+            this.setState({
+                AlertText: ex.message,
+                AlertType: "danger",
+                createLoader: false
+            });
             console.log(ex);
         }
     }
@@ -77,20 +109,24 @@ class Home extends Component {
     update = async () => {
         try {
             this.setState({
-                loading: true
+                loading: true,
+                AlertText: "",
+                AlertType: "danger",
             });
             axios.post('/apis/todo/update', {
                 updatedList: this.state.currentList
             })
             .then((res) => {
-                if(res.data.success){
+                if (res.data.success) {
                     this.setState({
-                        loading: false,
                         AlertText: "List Updated!",
                         AlertType: "success"
                     });
                     this.getAllToDos();
                 }
+                this.setState({
+                    loading: false
+                });
             })
             .catch(err => {
                 this.setState({
@@ -112,28 +148,32 @@ class Home extends Component {
 
     remove = async () => {
         try {
-            this.setState({removeLoader: true});
+            this.setState({
+                removeLoader: true,
+                AlertText: "",
+                AlertType: "danger",
+            });
             axios.post('/apis/todo/remove', {
-                "id": this.state.currentList._id
-            })
-            .then((res) => {
-                if(res.data.success){
+                    "id": this.state.currentList._id
+                })
+                .then((res) => {
+                    if (res.data.success) {
+                        this.setState({
+                            removeLoader: false,
+                            AlertText: "ToDo list deleted!",
+                            AlertType: "success"
+                        });
+                        this.getAllToDos();
+                    }
+                })
+                .catch(err => {
                     this.setState({
                         removeLoader: false,
-                        AlertText: "ToDo list deleted!",
-                        AlertType: "success"
+                        AlertText: err,
+                        AlertType: "danger"
                     });
-                    this.getAllToDos();
-                }
-            })
-            .catch(err => {
-                this.setState({
-                    removeLoader: false,
-                    AlertText: err,
-                    AlertType: "danger"
+                    console.log(err);
                 });
-                console.log(err);
-            });
         } catch (ex) {
             this.setState({
                 removeLoader: false,
@@ -142,6 +182,50 @@ class Home extends Component {
             });
             console.log(ex);
         }
+    }
+
+    initiateNewTodo = () => {
+        this.setState({
+            newList: true,
+            currentList: {
+                title: "",
+                list: [],
+                AlertText: "",
+                AlertType: "danger",
+            },
+            currentTodos: []
+        });
+    }
+
+    resetNew = () => {
+        this.setState({
+            newList: false,
+            AlertText: "",
+            AlertType: "danger",
+        });
+        let index = this.state.currentindex >=0 ? this.state.currentindex : 0;
+        if (this.state.todoList.length >= (index+ 1)) {
+            this.setState({
+                currentList: this.state.todoList[index],
+                currentTodos: this.state.todoList[index].list,
+                currentindex: index,
+            });
+        }
+    }
+
+    addNewTodoItem = () => {
+        let newItem = {
+            item: this.state.newTodoItem,
+            done: false,
+            timeStemp: +new Date()
+        }
+        let currentList = this.state.currentList;
+        currentList.list.push(newItem);
+        this.setState({
+            currentList: currentList,
+            currentTodos: currentList.list,
+            newTodoItem: "",
+        });
     }
 
     toggleChecked = (index) => {
@@ -156,7 +240,7 @@ class Home extends Component {
     }
 
     onListChanged = (index) => {
-        if (this.state.todoList.length >= (index + 1)) {
+        if (this.state.todoList.length >= (index + 1) && !this.state.newList) {
             this.setState({
                 currentList: this.state.todoList[index],
                 currentTodos: this.state.todoList[index].list,
@@ -217,19 +301,21 @@ class Home extends Component {
                 </List.Group>
                 <div className="mt-6">
                   <Button
-                    RootComponent="a"
-                    href="/email"
                     block={true}
-                    color="secondary"
+                    color="primary"
+                    icon="plus"
+                    onClick={this.initiateNewTodo}
+                    disabled={this.state.newList}
                   >
-                    Compose new List
+                    New List
                   </Button>
                 </div>
               </div>
             </Grid.Col>
             <Grid.Col md={9}>
                 <div style={{marginTop: '10%'}}>
-                    {this.state.editMode ? (
+                {!this.state.newList ?
+                    this.state.editMode ? (
                         <Card>
                         <Card.Header>
                             <Card.Title><Form.Input name="title" value={this.state.currentList.title} onChange={this.handleTodoTitleChange} /></Card.Title>
@@ -269,6 +355,18 @@ class Home extends Component {
                                     )
                                 })
                             }
+                            <Form.InputGroup>
+                                <Form.Input value={this.state.newTodoItem} onChange={e => {this.setState({newTodoItem: e.target.value})}}/>
+                                <Form.InputGroupAppend>
+                                <Button
+                                    color="primary"
+                                    icon="plus"
+                                    outline
+                                    onClick={this.addNewTodoItem.bind(this)}
+                                >
+                                </Button>
+                                </Form.InputGroupAppend>
+                            </Form.InputGroup>
                         </Form.Group>
                         </Card.Body>
                         <Card.Footer>
@@ -319,7 +417,66 @@ class Home extends Component {
                             </div>
                         </Card.Footer>
                     </Card>
-                    )}
+                    ) : (
+                        <Card>
+                        <Card.Header>
+                            <Card.Title><Form.Input name="title" value={this.state.currentList.title} onChange={this.handleTodoTitleChange} /></Card.Title>
+                            <Card.Options>
+                            <Button 
+                                color="success"
+                                size="sm" 
+                                icon="check"
+                                loading={this.state.createLoader}
+                                onClick={this.create.bind(this)}>
+                                Save
+                            </Button>
+                            <Button color="danger" size="sm" className="ml-2" icon="trash-2" onClick={this.resetNew.bind(this)}>
+                                Reset
+                            </Button>
+                            </Card.Options>
+                        </Card.Header>
+                        <Card.Body>
+                        <Form.Group label="Tasks">
+                            {
+                                this.state.currentTodos.map((data, i) => {
+                                    return (
+                                            <Form.InputGroup key={i}>
+                                                <Form.Input name={i} value={data.item} onChange={this.handleTodoTextChange.bind(this)}/>
+                                                <Form.InputGroupAppend>
+                                                <Button
+                                                    color="primary"
+                                                    icon="x"
+                                                    outline
+                                                    onClick={this.handleTodoItemRemove.bind(this)}
+                                                >
+                                                </Button>
+                                                </Form.InputGroupAppend>
+                                            </Form.InputGroup>
+                                    )
+                                })
+                            }
+                            <Form.InputGroup>
+                                <Form.Input value={this.state.newTodoItem} onChange={e => {this.setState({newTodoItem: e.target.value})}}/>
+                                <Form.InputGroupAppend>
+                                <Button
+                                    color="primary"
+                                    icon="plus"
+                                    outline
+                                    onClick={this.addNewTodoItem.bind(this)}
+                                >
+                                </Button>
+                                </Form.InputGroupAppend>
+                            </Form.InputGroup>
+                        </Form.Group>
+                        </Card.Body>
+                        <Card.Footer>
+                            <div style={{float:"right"}}>
+                                <Button disabled={this.state.editMode || this.state.newList} loading={this.state.loading} color="primary" icon="repeat" onClick={this.update.bind(this)}>Update</Button>
+                            </div>
+                        </Card.Footer>
+                    </Card>
+                    )
+                    }
                     <div style={{
                         display: this.state.AlertText ? "block" : "none"
                     }}>
