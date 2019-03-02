@@ -30,6 +30,9 @@ routesApi.includeRoutes = app => {
 
     app.use('/ping', (req, res) => res.status(200).send('pong'));
 
+    const userAuth = require('./userAuth');
+    app.use('/auth', userAuth);
+
     app.use('/apis/*', isLoggedIn);
 }
 
