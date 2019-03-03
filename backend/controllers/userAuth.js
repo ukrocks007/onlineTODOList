@@ -4,6 +4,11 @@ const config = require('../configs/config');
 
 const login = async (username, password) => {
     try {
+        username = username ? username.toString().toLowerCase() : "";
+        if (!username)
+            throw {
+                message: "Username can`t be empty!"
+            }
         var user = await Users.findOne({
             email: username
         });
@@ -40,7 +45,21 @@ const login = async (username, password) => {
 }
 
 const createUser = async (username, password) => {
-    try{
+    try {
+        username = username ? username.toString().toLowerCase() : "";
+        if (!username) {
+            throw {
+                message: "Username can`t be empty!"
+            }
+        }
+        let alreadyExists = await Users.find({
+            email: username
+        });
+        if (alreadyExists.length > 0) {
+            throw {
+                message: "Email already exists"
+            }
+        }
         var user = new Users({
             email: username,
             password: password
@@ -51,7 +70,7 @@ const createUser = async (username, password) => {
             success: true,
             user: user
         }
-    }catch(ex){
+    } catch (ex) {
         console.log(ex);
         return ex;
     }

@@ -21,7 +21,8 @@ class SiteWrapper extends React.Component {
                     imageURL: "./images/logo.png",
                     navItems: (
                         <Nav.Item type="div" className="">
-                          Welcome To Online ToDo Lost
+                          {this.props.signUp ? <Button color="primary" onClick={() => window.location.replace('/')}>Login</Button> : 
+                          <Button color="primary" onClick={() => window.location.replace('/signup')}>Sign Up</Button>}
                         </Nav.Item>
                       ),
                 }}
