@@ -1,0 +1,35 @@
+
+version: "2"
+services:
+
+  mongo:
+    container_name: todo_mongo
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
+
+  front_end:
+    container_name: todo_frontend
+    restart: always
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    links:
+      - backend
+    depends_on:
+      - backend
+
+  backend:
+    container_name: todo_backend
+    restart: always
+    build: ./backend
+    ports:
+      - "80:80"
+    links:
+      - mongo
+    depends_on:
+      - mongo
+    environment:
+      WAIT_HOSTS: mongo:27017
