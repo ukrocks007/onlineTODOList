@@ -317,30 +317,30 @@ class Home extends Component {
                 {!this.state.newList ?
                     this.state.editMode ? (
                         <Card>
-                        <Card.Header>
-                            <Card.Title><Form.Input name="title" value={this.state.currentList.title} onChange={this.handleTodoTitleChange} /></Card.Title>
-                            <Card.Options>
-                            <Button 
-                                color={this.state.editMode ? "success" : "info"} 
-                                size="sm" 
-                                icon={this.state.editMode ? "check" : "edit"} 
-                                onClick={()=>{
-                                this.setState({editMode: !this.state.editMode})
-                            }}>
-                                {this.state.editMode ? "Done" : "Edit"}
-                            </Button>
-                            <Button disabled={this.state.editMode} loading={this.state.removeLoader} color="danger" size="sm" className="ml-2" icon="trash-2" onClick={this.remove.bind(this)}>
-                                Remove
-                            </Button>
-                            </Card.Options>
-                        </Card.Header>
+                            <Card.Header>
+                                <Card.Title><Form.Input placeholder="Enter title here" name="title" value={this.state.currentList.title} onChange={this.handleTodoTitleChange} /></Card.Title>
+                                <Card.Options>
+                                <Button 
+                                    color={this.state.editMode ? "success" : "info"} 
+                                    size="sm" 
+                                    icon={this.state.editMode ? "check" : "edit"} 
+                                    onClick={()=>{
+                                    this.setState({editMode: !this.state.editMode})
+                                }}>
+                                    {this.state.editMode ? "Done" : "Edit"}
+                                </Button>
+                                <Button disabled={this.state.editMode} loading={this.state.removeLoader} color="danger" size="sm" className="ml-2" icon="trash-2" onClick={this.remove.bind(this)}>
+                                    Remove
+                                </Button>
+                                </Card.Options>
+                            </Card.Header>
                         <Card.Body>
                         <Form.Group label="Tasks">
                             {
                                 this.state.currentTodos.map((data, i) => {
                                     return (
                                             <Form.InputGroup key={i}>
-                                                <Form.Input name={i} value={data.item} onChange={this.handleTodoTextChange.bind(this)}/>
+                                                <Form.Input placeholder="Enter task here" name={i} value={data.item} onChange={this.handleTodoTextChange.bind(this)}/>
                                                 <Form.InputGroupAppend>
                                                 <Button
                                                     name={i}
@@ -356,7 +356,7 @@ class Home extends Component {
                                 })
                             }
                             <Form.InputGroup>
-                                <Form.Input value={this.state.newTodoItem} onChange={e => {this.setState({newTodoItem: e.target.value})}}/>
+                                <Form.Input placeholder="Enter task here" value={this.state.newTodoItem} onChange={e => {this.setState({newTodoItem: e.target.value})}}/>
                                 <Form.InputGroupAppend>
                                 <Button
                                     color="primary"
@@ -420,7 +420,7 @@ class Home extends Component {
                     ) : (
                         <Card>
                         <Card.Header>
-                            <Card.Title><Form.Input name="title" value={this.state.currentList.title} onChange={this.handleTodoTitleChange} /></Card.Title>
+                            <Card.Title><Form.Input placeholder="Enter title here" name="title" value={this.state.currentList.title} onChange={this.handleTodoTitleChange} /></Card.Title>
                             <Card.Options>
                             <Button 
                                 color="success"
@@ -456,7 +456,7 @@ class Home extends Component {
                                 })
                             }
                             <Form.InputGroup>
-                                <Form.Input value={this.state.newTodoItem} onChange={e => {this.setState({newTodoItem: e.target.value})}}/>
+                                <Form.Input placeholder="Enter task here" value={this.state.newTodoItem} onChange={e => {this.setState({newTodoItem: e.target.value})}}/>
                                 <Form.InputGroupAppend>
                                 <Button
                                     color="primary"
