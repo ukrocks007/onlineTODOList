@@ -110,7 +110,7 @@ npm run test
 
 ## Extra features which can be implemented
 
-- [ ] Showing time & date when the task was added
+- [X] Showing time & date when the task was added
 - [ ] Sharing the list between different users
 - [ ] Use metamask login
 - [ ] Saving data on blockchain instead of db
