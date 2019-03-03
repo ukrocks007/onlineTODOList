@@ -31,7 +31,7 @@ Frontend uses tabler-react as UI framework & supports all popular web browsers. 
 
 ## Security considerations
 
-Backend saves passwords in encrypted format in database. Also uses JWT for login. So unauthrized access are prevented. While using in production make sure to change the JWT secret from backend config file located in configs folder.
+Backend saves passwords in encrypted format in database. Also uses JWT for login. So unauthorized access to the APIs are prevented. While using in production make sure to change the JWT secret from backend config file located in configs folder.
 
 ## How to build and deploy the application
 
@@ -53,7 +53,7 @@ In first terminal start backend
 npm run start
 ```
 
-In second termainl start frontend
+In second termainal start frontend
 
 ```
 cd ../frontend
@@ -68,7 +68,7 @@ npm run build
 
 This will build optimised frontend and save it in build directory in frontend.
 
-You can use SimpleHTTPServer of python or serve of ruby to host the build folder.
+You can use SimpleHTTPServer of python or httpd of ruby to host the build folder.
 
 ```
 cd build
@@ -76,3 +76,42 @@ python -m SimpleHTTPServer 3000
 or
 ruby -run -e httpd . -p 3000
 ```
+
+Once both backend and frontend is running you can access the app on
+
+http://localhost:3000
+
+2. Using Docker
+
+In order to connect to mongodb running in docker make sure local mongodb is stopped and change localhost to mongo in the mongo url in config file located in configs folder of backend. Here mongo is the name of mongodb service.
+
+In the root directory of the project run following command
+
+```
+docker-compose up --build
+```
+
+This will spin up 3 containers for Frontend, Backend & Mongo.
+
+It may take some time to start as images has to be downloaded from dockerhub and building may also take time.
+Once you are able to see the frontend logs on the terminal you can access the app on
+
+http://localhost:3000
+
+## Login details for testing purposes
+
+As Sign-up feature in implemented you can create you own users and test the app.
+
+In the backend to test API you can run
+
+```
+npm run test
+```
+
+## Extra features which can be implemented
+
+- [ ] Showing time & date when the task was added
+- [ ] Sharing the list between different users
+- [ ] Use metamask login
+- [ ] Saving data on blockchain instead of db
+- [ ] Adding attachments to tasks like pdf, images etc
