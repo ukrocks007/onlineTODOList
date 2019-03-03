@@ -3,10 +3,11 @@ import React, {
 } from 'react';
 import SiteWrapper from '../container/layout';
 import {
-    Page, Card, Button, Form, Grid, List, Container, Alert
+    Page, Card, Button, Form, Grid, List, Container, Alert, Badge
 } from 'tabler-react';
 import axios from 'axios';
 import { Route , withRouter} from 'react-router-dom';
+import moment from 'moment';
 
 class Home extends Component {
 
@@ -221,7 +222,7 @@ class Home extends Component {
         let newItem = {
             item: this.state.newTodoItem,
             done: false,
-            timeStemp: +new Date()
+            timeStamp: +new Date()
         }
         let currentList = this.state.currentList;
         currentList.list.push(newItem);
@@ -403,21 +404,30 @@ class Home extends Component {
                             </Card.Options>
                         </Card.Header>
                         <Card.Body>
-                        <Form.Group label="Tasks">
+                        <List.Group>
                             {
                                 this.state.currentTodos.map((data, i) => {
                                     return (
-                                            <Form.Checkbox 
-                                                key = { i }
-                                                checked = { data.done } 
-                                                onChange = { this.toggleChecked.bind(this, i) }
-                                                label = { data.item } 
-                                                name = { i } 
-                                            />
+                                        <List.GroupItem>
+                                            <div style={{float: "left", overflow: "hidden", wordWrap: "break-word"}}>
+                                                <Form.Checkbox 
+                                                    key = { i }
+                                                    checked = { data.done } 
+                                                    onChange = { this.toggleChecked.bind(this, i) }
+                                                    label = { data.item } 
+                                                    name = { i } 
+                                                />
+                                            </div>
+                                            <div style={{float: "right"}}>
+                                                <Badge color="primary" className="mr-1">
+                                                    {moment().fromNow(data.timeStamp)}
+                                                </Badge>
+                                            </div>
+                                        </List.GroupItem>
                                     )
                                 })
                             }
-                        </Form.Group>
+                        </List.Group>
                         </Card.Body>
                         <Card.Footer>
                             <div style={{float:"right"}}>
