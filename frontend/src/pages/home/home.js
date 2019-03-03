@@ -46,6 +46,7 @@ class Home extends Component {
                             ? this.state.currentindex : 0);
                         } else {
                             this.setState({
+                                noData: true,
                                 currentList: {},
                                 currentTodos: [],
                                 currentindex: -1,
@@ -114,6 +115,7 @@ class Home extends Component {
                 AlertText: "",
                 AlertType: "danger",
             });
+
             axios.post('/apis/todo/update', {
                 updatedList: this.state.currentList
             })
@@ -188,6 +190,7 @@ class Home extends Component {
     initiateNewTodo = () => {
         this.setState({
             newList: true,
+            noData: false,
             currentList: {
                 title: "",
                 list: [],
@@ -322,6 +325,7 @@ class Home extends Component {
                                 <Card.Title><Form.Input placeholder="Enter title here" name="title" value={this.state.currentList.title} onChange={this.handleTodoTitleChange} /></Card.Title>
                                 <Card.Options>
                                 <Button 
+                                    disabled={this.state.noData}
                                     color={this.state.editMode ? "success" : "info"} 
                                     size="sm" 
                                     icon={this.state.editMode ? "check" : "edit"} 
@@ -330,7 +334,7 @@ class Home extends Component {
                                 }}>
                                     {this.state.editMode ? "Done" : "Edit"}
                                 </Button>
-                                <Button disabled={this.state.editMode} loading={this.state.removeLoader} color="danger" size="sm" className="ml-2" icon="trash-2" onClick={this.remove.bind(this)}>
+                                <Button disabled={this.state.noData || this.state.editMode} loading={this.state.removeLoader} color="danger" size="sm" className="ml-2" icon="trash-2" onClick={this.remove.bind(this)}>
                                     Remove
                                 </Button>
                                 </Card.Options>
@@ -344,6 +348,7 @@ class Home extends Component {
                                                 <Form.Input placeholder="Enter task here" name={i} value={data.item} onChange={this.handleTodoTextChange.bind(this)}/>
                                                 <Form.InputGroupAppend>
                                                 <Button
+                                                    disabled={this.state.noData}
                                                     name={i}
                                                     color="danger"
                                                     icon="x"
@@ -360,6 +365,7 @@ class Home extends Component {
                                 <Form.Input placeholder="Enter task here" value={this.state.newTodoItem} onChange={e => {this.setState({newTodoItem: e.target.value})}}/>
                                 <Form.InputGroupAppend>
                                 <Button
+                                    disabled={this.state.noData}
                                     color="primary"
                                     icon="plus"
                                     outline
@@ -372,7 +378,7 @@ class Home extends Component {
                         </Card.Body>
                         <Card.Footer>
                             <div style={{float:"right"}}>
-                                <Button disabled={this.state.editMode} loading={this.state.loading} color="primary" icon="repeat" onClick={this.update.bind(this)}>Update</Button>
+                                <Button disabled={this.state.noData || this.state.editMode} loading={this.state.loading} color="primary" icon="repeat" onClick={this.update.bind(this)}>Update</Button>
                             </div>
                         </Card.Footer>
                     </Card>
@@ -382,6 +388,7 @@ class Home extends Component {
                             <Card.Title>{this.state.currentList ? this.state.currentList.title : ""}</Card.Title>
                             <Card.Options>
                             <Button 
+                                disabled={this.state.noData}
                                 color={this.state.editMode ? "success" : "info"} 
                                 size="sm" 
                                 icon={this.state.editMode ? "check" : "edit"} 
@@ -390,7 +397,7 @@ class Home extends Component {
                             }}>
                                 {this.state.editMode ? "Done" : "Edit"}
                             </Button>
-                            <Button disabled={this.state.editMode} loading={this.state.removeLoader} color="danger" size="sm" className="ml-2" icon="trash-2" onClick={this.remove.bind(this)}>
+                            <Button disabled={this.state.noData || this.state.editMode} loading={this.state.removeLoader} color="danger" size="sm" className="ml-2" icon="trash-2" onClick={this.remove.bind(this)}>
                                 Remove
                             </Button>
                             </Card.Options>
@@ -414,7 +421,7 @@ class Home extends Component {
                         </Card.Body>
                         <Card.Footer>
                             <div style={{float:"right"}}>
-                                <Button disabled={this.state.editMode} loading={this.state.loading} color="primary" icon="repeat" onClick={this.update.bind(this)}>Update</Button>
+                                <Button disabled={this.state.noData || this.state.editMode} loading={this.state.loading} color="primary" icon="repeat" onClick={this.update.bind(this)}>Update</Button>
                             </div>
                         </Card.Footer>
                     </Card>
@@ -424,6 +431,7 @@ class Home extends Component {
                             <Card.Title><Form.Input placeholder="Enter title here" name="title" value={this.state.currentList.title} onChange={this.handleTodoTitleChange} /></Card.Title>
                             <Card.Options>
                             <Button 
+                                disabled={this.state.noData}
                                 color="success"
                                 size="sm" 
                                 icon="check"
@@ -431,7 +439,7 @@ class Home extends Component {
                                 onClick={this.create.bind(this)}>
                                 Save
                             </Button>
-                            <Button color="danger" size="sm" className="ml-2" icon="trash-2" onClick={this.resetNew.bind(this)}>
+                            <Button disabled={this.state.noData} color="danger" size="sm" className="ml-2" icon="trash-2" onClick={this.resetNew.bind(this)}>
                                 Reset
                             </Button>
                             </Card.Options>
@@ -472,7 +480,7 @@ class Home extends Component {
                         </Card.Body>
                         <Card.Footer>
                             <div style={{float:"right"}}>
-                                <Button disabled={this.state.editMode || this.state.newList} loading={this.state.loading} color="primary" icon="repeat" onClick={this.update.bind(this)}>Update</Button>
+                                <Button disabled={this.state.editMode || this.state.newList || this.state.noData} loading={this.state.loading} color="primary" icon="repeat" onClick={this.update.bind(this)}>Update</Button>
                             </div>
                         </Card.Footer>
                     </Card>
