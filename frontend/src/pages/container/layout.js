@@ -1,5 +1,5 @@
 import * as React from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter} from 'react-router-dom';
 
 import {
     Site,
@@ -21,7 +21,7 @@ class SiteWrapper extends React.Component {
                     imageURL: "./images/logo.png",
                     navItems: (
                         <Nav.Item type="div" className="">
-                            <Button icon="log-out" color="primary" onClick={()=> window.location.replace('/logout')}>
+                            <Button icon="log-out" color="primary" onClick={()=> this.props.history.push('/logout')}>
                             Logout
                             </Button>
                         </Nav.Item>

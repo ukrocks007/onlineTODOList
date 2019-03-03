@@ -1,5 +1,5 @@
 import * as React from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter} from 'react-router-dom';
 
 import {
     Site,
@@ -21,8 +21,8 @@ class SiteWrapper extends React.Component {
                     imageURL: "./images/logo.png",
                     navItems: (
                         <Nav.Item type="div" className="">
-                          {this.props.signUp ? <Button color="primary" onClick={() => window.location.replace('/')}>Login</Button> : 
-                          <Button color="primary" onClick={() => window.location.replace('/signup')}>Sign Up</Button>}
+                          {this.props.signUp ? <Button color="primary" onClick={() => this.props.history.push('/')}>Login</Button> : 
+                          <Button color="primary" onClick={() => this.props.history.push('/signup')}>Sign Up</Button>}
                         </Nav.Item>
                       ),
                 }}

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Layout from '../container/wrapper';
 import { Form, FormCard, Dimmer, Page, Alert } from 'tabler-react'
 import axios from 'axios';
+import { Route , withRouter} from 'react-router-dom';
 
 class Signup extends Component {
     constructor(props) {
@@ -45,7 +46,7 @@ class Signup extends Component {
                                 AlertType: "success",
                                 loader: false
                             });
-                            window.location.replace('/');
+                            this.props.history.push('/');
                         } else {
                             this.setState({
                                 AlertText: response.data.message ? response.data.message : "Unexpected error occured!",
@@ -85,7 +86,7 @@ class Signup extends Component {
                 WebkitOverflowScrolling: "touch"
             }}
         >
-            <Layout signUp={true}>
+            <Layout signUp={true} {...this.props}>
                 <Page.Content>
                     <FormCard
                         buttonText="Signup"

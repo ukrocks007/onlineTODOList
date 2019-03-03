@@ -6,6 +6,7 @@ import {
     Page, Card, Button, Form, Grid, List, Container, Alert
 } from 'tabler-react';
 import axios from 'axios';
+import { Route , withRouter} from 'react-router-dom';
 
 class Home extends Component {
 
@@ -275,7 +276,7 @@ class Home extends Component {
       
   render() {
     return (
-      <SiteWrapper>
+      <SiteWrapper {...this.props}>
         <div className="my-3 my-md-5">
         <Container>
           <Grid.Row>

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Layout from '../container/wrapper';
 import { Form, FormCard, Dimmer, Page, Alert } from 'tabler-react'
 import axios from 'axios';
+import { Route , withRouter} from 'react-router-dom';
+
 
 class Login extends Component {
     constructor(props) {
@@ -46,7 +48,7 @@ class Login extends Component {
                             this.setState({
                                 loader: false
                             });
-                            window.location.reload();
+                            window.location.replace('/');
                         } else {
                             this.setState({
                                 AlertText: response.data.message ? response.data.message : "Unexpected error occured!",
@@ -86,7 +88,7 @@ class Login extends Component {
                 WebkitOverflowScrolling: "touch"
             }}
         >
-            <Layout>
+            <Layout {...this.props}>
                 <Page.Content>
                     <FormCard
                         buttonText="Login"
