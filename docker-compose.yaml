@@ -6,7 +6,7 @@ services:
     container_name: todo_mongo
     image: mongo
     volumes:
-      - ./data:/data/db
+      - ./mongo_data:/data/db
     ports:
       - "27017:27017"
 
