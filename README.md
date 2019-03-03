@@ -1,6 +1,6 @@
 # Online TODO List application
 
-A simple online TODO list with a web interface that can be used in all popular web browsers. The application Supports multiple users and store data.
+A simple online TODO list with a web interface that can be used in **all popular web browsers**. The application Supports **multiple users and store data**.
 
 #### Features covered
 - [x] Users can sign in securely using basic username and password authentication
@@ -13,25 +13,25 @@ A simple online TODO list with a web interface that can be used in all popular w
 
 ## Brief description
 
-This web application is used to manage Todo lists of multiple users. User can signup and login using email address and password. User can create multiple Todo lists containing multiple tasks. User can check and uncheck the tasks. By using update button the lists are stored in database. User can perform CRUD operations on Todo lists and the tasks within the lists.
+This web application is used to manage Todo lists of multiple users. User can **signup** and **login** using *email address and password*. User can create **multiple Todo lists containing multiple tasks**. User can **check and uncheck** the tasks. By using update button the lists are stored in database. User can perform *CRUD operations on Todo lists and the tasks within the lists*.
 
 ## Overview of the technologies/architecture
 
 The application has three parts.
-1. Frontend
+1. **Frontend**
    - React application using tabler-react
-2. Backend
+2. **Backend**
    - Node REST API using express
-3. Database
+3. **Database**
    - MongoDB
 
-Frontend and backend are two independant application. Backend is dependent on mongodb.
+Frontend and backend are two **independant application**. Backend is dependent on mongodb.
 
-Frontend uses tabler-react as UI framework & supports all popular web browsers. Frontend is mobile responsive and supports all screen resolutions.
+Frontend uses tabler-react as UI framework & supports *all popular web browsers*. Frontend is **mobile responsive and supports all screen resolutions**.
 
 ## Security considerations
 
-Backend saves passwords in encrypted format in database. Also uses JWT for login. So unauthorized access to the APIs are prevented. While using in production make sure to change the JWT secret from backend config file located in configs folder.
+Backend saves passwords in **encrypted format** in database. Also uses *JWT* for login. So **unauthorized access** to the APIs are prevented. While using in production make sure to change the J*WT secret* from backend config file located in configs folder.
 
 ## How to build and deploy the application
 
@@ -43,7 +43,7 @@ cd onlineTODOList/frontend && npm i
 cd ../backend && npm i
 ```
 
-Make sure that mongodb is running in localhost or if using cloud hosted mongo change the URL in the backend config file in configs folder.
+Make sure that mongodb is running in localhost or if using cloud hosted mongo change the **URL** in the backend **config file in configs folder**.
 
 To run application:
 
@@ -83,7 +83,7 @@ http://localhost:3000
 
 2. Using Docker
 
-In order to connect to mongodb running in docker make sure local mongodb is stopped and change localhost to mongo in the mongo url in config file located in configs folder of backend. Here mongo is the name of mongodb service.
+In order to connect to mongodb running in docker make sure local mongodb is **stopped** and change **_localhost_ to _mongo_** in the *mongo url* in *config file* located in configs folder of backend. Here **mongo is the name of mongodb service**.
 
 In the root directory of the project run following command
 
@@ -100,7 +100,7 @@ http://localhost:3000
 
 ## Login details for testing purposes
 
-As Sign-up feature in implemented you can create you own users and test the app.
+As **Sign-up feature** in implemented you can create you own users and test the app.
 
 In the backend to test API you can run
 
